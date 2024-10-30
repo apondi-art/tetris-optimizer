@@ -38,11 +38,15 @@ func Readfile() [][]string {
 }
 
 func ReplaceHash(tetriminoes [][]string) [][]string {
-	for i, tetrimino := range tetriminoes {
-		for j, mino := range tetrimino {
-			if mino == "#" {
-				tetriminoes[i][j] = string('A' + i)
+	for _, tetrimino := range tetriminoes {
+		for _,mino := range tetrimino{
+			for j,char := range mino{
+
+				if char == # {
+					tetriminoes[i][j] = string('A' + i)
+				}
 			}
+			fmt.Println(mino)
 		}
 	}
 	return tetriminoes

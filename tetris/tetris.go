@@ -19,16 +19,31 @@ func Readfile() [][]string {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		input := scanner.Text()
-		tetrimino = append(tetrimino, strings.TrimSpace(input))
+		input := strings.TrimSpace(scanner.Text())
+	
 		if input == "" {
-			tetriminoes = append(tetriminoes, tetrimino)
-			tetrimino = nil
+			if len(tetrimino) > 0 {
+				tetriminoes = append(tetriminoes, tetrimino)
+				tetrimino = nil 
+			}
+			continue
 		}
 
+		tetrimino = append(tetrimino, input)
 	}
-	if tetrimino != nil {
+	if len(tetrimino) > 0 {
 		tetriminoes = append(tetriminoes, tetrimino)
+	}
+	return tetriminoes
+}
+
+func ReplaceHash(tetriminoes [][]string) [][]string {
+	for i, tetrimino := range tetriminoes {
+		for j, mino := range tetrimino {
+			if mino == "#" {
+				tetriminoes[i][j] = string('A' + i)
+			}
+		}
 	}
 	return tetriminoes
 }

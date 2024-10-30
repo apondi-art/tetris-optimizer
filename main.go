@@ -8,5 +8,6 @@ import (
 
 func main() {
 	result := tetris.Readfile()
-	fmt.Println(result)
+	final := tetris.ReplaceHash(result)
+	fmt.Println(final)
 }

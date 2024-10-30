@@ -20,11 +20,11 @@ func Readfile() [][]string {
 
 	for scanner.Scan() {
 		input := strings.TrimSpace(scanner.Text())
-	
+
 		if input == "" {
 			if len(tetrimino) > 0 {
 				tetriminoes = append(tetriminoes, tetrimino)
-				tetrimino = nil 
+				tetrimino = nil
 			}
 			continue
 		}
@@ -38,15 +38,15 @@ func Readfile() [][]string {
 }
 
 func ReplaceHash(tetriminoes [][]string) [][]string {
-	for _, tetrimino := range tetriminoes {
-		for _,mino := range tetrimino{
-			for j,char := range mino{
-
-				if char == # {
-					tetriminoes[i][j] = string('A' + i)
+	for i, tetrimino := range tetriminoes {
+		for j, mino := range tetrimino {
+			minoRunes := []rune(mino)
+			for k := range minoRunes {
+				if minoRunes[k] == '#' {
+					minoRunes[k] = rune('A' + i)
 				}
 			}
-			fmt.Println(mino)
+			tetrimino[j] = string(minoRunes)
 		}
 	}
 	return tetriminoes

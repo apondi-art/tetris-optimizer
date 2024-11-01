@@ -51,3 +51,41 @@ func ReplaceHash(tetriminoes [][]string) [][]string {
 	}
 	return tetriminoes
 }
+
+func CheckingValidTetrimino(tetrimino []string) bool {
+	countConnection := 0
+	count := 0
+
+	// Helper function to check if a given position is valid and not '.'
+	isValid := func(i, j int) bool {
+		return i >= 0 && i < len(tetrimino) && j >= 0 && j < len(tetrimino[i]) && tetrimino[i][j] != '.'
+	}
+	for i := range tetrimino {
+		for j := range tetrimino[i] {
+			if (tetrimino[i][j] >= 'A' && tetrimino[i][j] <= 'Z') {
+				count++
+			}
+			if tetrimino[i][j] != '.' {
+				// Check all four possible adjacent positions
+				if isValid(i+1, j) { // Below
+					countConnection++
+				}
+				if isValid(i-1, j) { // Above
+					countConnection++
+				}
+				if isValid(i, j+1) { // Right
+					countConnection++
+				}
+				if isValid(i, j-1) { // Left
+					countConnection++
+				}
+			}
+		}
+	}
+	if count == 4 && (countConnection >= 6 && countConnection <= 8) {
+		return true
+
+	}
+
+	return false
+}

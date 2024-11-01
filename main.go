@@ -2,16 +2,22 @@ package main
 
 import (
 	"fmt"
-	"strings"
 
 	"learn.zone01kisumu.ke/git/quochieng/tetris-optimizer.git/tetris"
 )
 
 func main() {
-	// result := tetris.Readfile()
-	// final := tetris.ReplaceHash(result)
-	// fmt.Println(final)
-	s := "...A ...A ...A ...A"
-	str := (strings.Fields(s))
-	fmt.Println(tetris.CheckingValidTetrimino(str))
+	tetriminoes, err := tetris.ReadTetriminos("text.txt")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
+	if !tetris.ValidateTetriminos(tetriminoes) {
+		fmt.Println("Some tetrimino blocks are invalid.")
+		return
+	}
+
+	tetriminoes = tetris.ReplaceHashes(tetriminoes)
+	fmt.Println("Validated and transformed tetriminoes:", tetriminoes)
 }

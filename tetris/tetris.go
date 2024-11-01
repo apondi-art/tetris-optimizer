@@ -7,21 +7,26 @@ import (
 	"strings"
 )
 
-func Readfile() [][]string {
+// ReadTetriminos reads tetrimino shapes from a file and returns them as a slice of slice of strings.
+func ReadTetriminos(filename string) ([][]string, error) {
 	var tetrimino []string
 	var tetriminoes [][]string
-	file, err := os.Open("text.txt")
+
+	// Open the file and handle any potential errors
+	file, err := os.Open(filename)
 	if err != nil {
-		fmt.Printf("error opening file ,%s", err)
-		return nil
+		return nil, fmt.Errorf("error opening file: %w", err)
 	}
 	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 
+	// Read each line from the file
 	for scanner.Scan() {
-		input := strings.TrimSpace(scanner.Text())
+		line := strings.TrimSpace(scanner.Text())
 
-		if input == "" {
+		// Check for an empty line, used to separate tetrimino blocks
+		if line == "" {
 			if len(tetrimino) > 0 {
 				tetriminoes = append(tetriminoes, tetrimino)
 				tetrimino = nil
@@ -29,63 +34,100 @@ func Readfile() [][]string {
 			continue
 		}
 
-		tetrimino = append(tetrimino, input)
+		// Validate the line length and characters
+		if !isValidLength(line) {
+			return nil, fmt.Errorf("error: line length must be 4 characters")
+		}
+		if !hasValidCharacters(line) {
+			return nil, fmt.Errorf("error: invalid characters, only '#' and '.' are allowed")
+		}
+
+		// Add valid line to the current tetrimino block
+		tetrimino = append(tetrimino, line)
 	}
+
+	// Check for any remaining tetrimino block at the end of the file
 	if len(tetrimino) > 0 {
 		tetriminoes = append(tetriminoes, tetrimino)
 	}
-	return tetriminoes
+
+	return tetriminoes, nil
 }
 
-func ReplaceHash(tetriminoes [][]string) [][]string {
-	for i, tetrimino := range tetriminoes {
-		for j, mino := range tetrimino {
-			minoRunes := []rune(mino)
-			for k := range minoRunes {
-				if minoRunes[k] == '#' {
-					minoRunes[k] = rune('A' + i)
-				}
-			}
-			tetrimino[j] = string(minoRunes)
+// isValidLength checks if the length of the string is equal to 4
+func isValidLength(s string) bool {
+	return len(s) == 4
+}
+
+// hasValidCharacters checks if the string contains only '#' or '.'
+func hasValidCharacters(s string) bool {
+	for _, char := range s {
+		if char != '#' && char != '.' {
+			return false
 		}
 	}
-	return tetriminoes
+	return true
 }
 
-func CheckingValidTetrimino(tetrimino []string) bool {
-	countConnection := 0
-	count := 0
+// ValidateTetriminos checks if all tetrimino blocks are valid
+func ValidateTetriminos(tetriminoes [][]string) bool {
+	for _, tetrimino := range tetriminoes {
+		if !isTetriminoValid(tetrimino) {
+			fmt.Println("Error: Invalid tetrimino")
+			return false
+		}
+	}
+	return true
+}
+
+// isTetriminoValid checks if a single tetrimino block is valid
+func isTetriminoValid(tetrimino []string) bool {
+	connectionCount := 0
+	hashCount := 0
 
 	// Helper function to check if a given position is valid and not '.'
-	isValid := func(i, j int) bool {
-		return i >= 0 && i < len(tetrimino) && j >= 0 && j < len(tetrimino[i]) && tetrimino[i][j] != '.'
+	isConnected := func(i, j int) bool {
+		return i >= 0 && i < len(tetrimino) && j >= 0 && j < len(tetrimino[i]) && tetrimino[i][j] == '#'
 	}
-	for i := range tetrimino {
-		for j := range tetrimino[i] {
-			if (tetrimino[i][j] >= 'A' && tetrimino[i][j] <= 'Z') {
-				count++
-			}
-			if tetrimino[i][j] != '.' {
-				// Check all four possible adjacent positions
-				if isValid(i+1, j) { // Below
-					countConnection++
+
+	// Iterate over the tetrimino grid to count '#' characters and connections
+	for i, row := range tetrimino {
+		for j, char := range row {
+			if char == '#' {
+				hashCount++
+				// Check all four possible adjacent positions for connections
+				if isConnected(i+1, j) { // Below
+					connectionCount++
 				}
-				if isValid(i-1, j) { // Above
-					countConnection++
+				if isConnected(i-1, j) { // Above
+					connectionCount++
 				}
-				if isValid(i, j+1) { // Right
-					countConnection++
+				if isConnected(i, j+1) { // Right
+					connectionCount++
 				}
-				if isValid(i, j-1) { // Left
-					countConnection++
+				if isConnected(i, j-1) { // Left
+					connectionCount++
 				}
 			}
 		}
 	}
-	if count == 4 && (countConnection >= 6 && countConnection <= 8) {
-		return true
 
+	// A valid tetrimino must have exactly 4 '#' characters and 6-8 connections
+	return hashCount == 4 && connectionCount >= 6 && connectionCount <= 8
+}
+
+// ReplaceHashes replaces '#' characters in tetrimino blocks with letters 'A', 'B', etc.
+func ReplaceHashes(tetriminoes [][]string) [][]string {
+	for i, tetrimino := range tetriminoes {
+		for j, row := range tetrimino {
+			rowRunes := []rune(row)
+			for k, char := range rowRunes {
+				if char == '#' {
+					rowRunes[k] = rune('A' + i)
+				}
+			}
+			tetrimino[j] = string(rowRunes)
+		}
 	}
-
-	return false
+	return tetriminoes
 }

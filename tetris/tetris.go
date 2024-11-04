@@ -3,6 +3,7 @@ package tetris
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strings"
 )
@@ -114,6 +115,25 @@ func isTetriminoValid(tetrimino []string) bool {
 
 	// A valid tetrimino must have exactly 4 '#' characters and 6-8 connections
 	return hashCount == 4 && connectionCount >= 6 && connectionCount <= 8
+}
+func BoardSize(tetris [][]string) int {
+	size := int(math.Ceil(math.Sqrt(float64(len(tetris) * 4))))
+	return size
+
+}
+
+func TetrisBoard(size int) [][]string {
+	wholeBoard := make([][]string, size)
+	for i := range wholeBoard {
+		wholeBoard[i] = make([]string, size)
+		for j := range wholeBoard[i] {
+			wholeBoard[i][j] = "."
+			
+		}
+
+	}
+	return wholeBoard
+
 }
 
 // ReplaceHashes replaces '#' characters in tetrimino blocks with letters 'A', 'B', etc.

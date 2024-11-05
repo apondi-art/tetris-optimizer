@@ -30,8 +30,8 @@ func ReturnIndexNonDots(s string, index int) string {
 }
 
 func TrimVertical(tetrimino []string) []string {
-	var notdot bool
 	for j := len(tetrimino[0]) - 1; j >= 0; j-- {
+		var notdot bool
 		for i := range tetrimino {
 			if tetrimino[i][j] != '.' {
 				notdot = true

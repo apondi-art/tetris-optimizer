@@ -3,7 +3,6 @@ package tetris
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 	"strings"
 )
@@ -12,7 +11,6 @@ import (
 func ReadTetriminos(filename string) ([][]string, error) {
 	var tetrimino []string
 	var tetriminoes [][]string
-
 	// Open the file and handle any potential errors
 	file, err := os.Open(filename)
 	if err != nil {
@@ -42,6 +40,7 @@ func ReadTetriminos(filename string) ([][]string, error) {
 		if !hasValidCharacters(line) {
 			return nil, fmt.Errorf("error: invalid characters, only '#' and '.' are allowed")
 		}
+
 
 		// Add valid line to the current tetrimino block
 		tetrimino = append(tetrimino, line)
@@ -116,11 +115,11 @@ func isTetriminoValid(tetrimino []string) bool {
 	// A valid tetrimino must have exactly 4 '#' characters and 6-8 connections
 	return hashCount == 4 && connectionCount >= 6 && connectionCount <= 8
 }
-func BoardSize(tetris [][]string) int {
-	size := int(math.Ceil(math.Sqrt(float64(len(tetris) * 4))))
-	return size
 
-}
+// func BoardSize(tetris [][]string) int {
+// 	size := int(math.Ceil(math.Sqrt(float64(len(tetris) * 4))))
+// 	return size
+// }
 
 func TetrisBoard(size int) [][]string {
 	wholeBoard := make([][]string, size)
@@ -128,12 +127,10 @@ func TetrisBoard(size int) [][]string {
 		wholeBoard[i] = make([]string, size)
 		for j := range wholeBoard[i] {
 			wholeBoard[i][j] = "."
-			
 		}
 
 	}
 	return wholeBoard
-
 }
 
 // ReplaceHashes replaces '#' characters in tetrimino blocks with letters 'A', 'B', etc.
@@ -151,3 +148,37 @@ func ReplaceHashes(tetriminoes [][]string) [][]string {
 	}
 	return tetriminoes
 }
+
+func CheckDotsHorinzontal(s string) bool {
+	for _, char := range s {
+		if char != '.' {
+			return false
+		}
+	}
+	return true
+}
+
+func TrimDotsHorizontal(tetrimino []string) []string {
+	var trimmed []string
+
+	// Iterate through each row of the tetrimino
+	for i := range tetrimino {
+		var containsDot bool
+		if CheckDotsHorinzontal(tetrimino[i]) {
+			containsDot = true
+		}
+		// If the row doesn't contain dots, add it to the trimmed slice
+		if !containsDot {
+			trimmed = append(trimmed, tetrimino[i])
+		}
+	}
+
+	// Return the rows without dots
+	return trimmed
+}
+
+func TrimVertical(tetrimino []string)[]string{
+
+}
+
+func 

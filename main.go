@@ -18,10 +18,11 @@ func main() {
 		fmt.Println("Some tetrimino blocks are invalid.")
 		return
 	}
-	size := tetris.BoardSize(tetriminoes)
-	Board := tetris.TetrisBoard(size)
-	fmt.Println(Board)
 
 	tetriminoes = tetris.ReplaceHashes(tetriminoes)
 	fmt.Println("Validated and transformed tetriminoes:", tetriminoes)
+	for i := range tetriminoes {
+		fmt.Println(tetris.TrimDotsHorizontal(tetriminoes[i]))
+		// fmt.Println(tetris.TrimDotsHorizontal(tetriminoes[i]))
+	}
 }

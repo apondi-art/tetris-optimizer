@@ -22,7 +22,9 @@ func main() {
 	tetriminoes = tetris.ReplaceHashes(tetriminoes)
 	fmt.Println("Validated and transformed tetriminoes:", tetriminoes)
 	for i := range tetriminoes {
-		fmt.Println(tetris.TrimDotsHorizontal(tetriminoes[i]))
+		tetriminoes[i] = tetris.TrimDotsHorizontal(tetriminoes[i])
+		tetriminoes[i] = tetris.TrimVertical(tetriminoes[i])
+		fmt.Println(tetriminoes[i])
 		// fmt.Println(tetris.TrimDotsHorizontal(tetriminoes[i]))
 	}
 }

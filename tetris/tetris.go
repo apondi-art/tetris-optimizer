@@ -8,6 +8,7 @@ import (
 )
 
 // ReadTetriminos reads tetrimino shapes from a file and returns them as a slice of slice of strings.
+//ReadTetrimins read data from text file then append each block to the 2-D slice
 func ReadTetriminos(filename string) ([][]string, error) {
 	var tetrimino []string
 	var tetriminoes [][]string
@@ -149,8 +150,9 @@ func ReplaceHashes(tetriminoes [][]string) [][]string {
 	return tetriminoes
 }
 
-func CheckDotsHorinzontal(s string) bool {
-	for _, char := range s {
+func CheckDotsHorizontal(row string) bool {
+	// Returns true if the row contains only dots
+	for _, char := range row {
 		if char != '.' {
 			return false
 		}
@@ -163,12 +165,8 @@ func TrimDotsHorizontal(tetrimino []string) []string {
 
 	// Iterate through each row of the tetrimino
 	for i := range tetrimino {
-		var containsDot bool
-		if CheckDotsHorinzontal(tetrimino[i]) {
-			containsDot = true
-		}
-		// If the row doesn't contain dots, add it to the trimmed slice
-		if !containsDot {
+		// If the row does not contain only dots, add it to the trimmed slice
+		if !CheckDotsHorizontal(tetrimino[i]) {
 			trimmed = append(trimmed, tetrimino[i])
 		}
 	}
@@ -177,8 +175,28 @@ func TrimDotsHorizontal(tetrimino []string) []string {
 	return trimmed
 }
 
+func ReturnIndexNonDots(s string, index int)string{
+	return s[:index] + s[index+1:]
+}
+
+
 func TrimVertical(tetrimino []string)[]string{
+	for j:= len(tetrimino[0])-1; j>= 0; j--{
+		var notdot bool
+		for i:=range tetrimino{
+			if tetrimino[i][j] != '.'{
+				notdot = true
+				break
+
+			}
+			if !notdot{
+				tetrimino[i] = ReturnIndexNonDots(tetrimino[i],j)
+			
+			} 
+		}
+	}
+	return tetrimino
 
 }
 
-func 
+

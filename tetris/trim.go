@@ -45,3 +45,12 @@ func TrimVertical(tetrimino []string) []string {
 	}
 	return tetrimino
 }
+
+func TrimAlltetriminos(tetriminos [][]string) [][]string {
+	for i := range tetriminos {
+		tetriminos[i] = TrimDotsHorizontal(tetriminos[i])
+		tetriminos[i] = TrimVertical(tetriminos[i])
+
+	}
+	return tetriminos
+}

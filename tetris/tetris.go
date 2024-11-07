@@ -34,3 +34,25 @@ func ReplaceHashes(tetriminoes [][]string) [][]string {
 	}
 	return tetriminoes
 }
+
+
+func CreateBoard(tetriminos [][]string) [][]string {
+
+	numTetriminos := len(tetriminos)
+
+	size := int(math.Ceil(math.Sqrt(float64(numTetriminos * 4))))
+
+	// Creating the board with the corrected size
+	board := make([][]string, size)
+	for i := range board {
+		board[i] = make([]string, size)
+	}
+
+	// Initializing the board with "." as an empty cell
+	for i := range board {
+		for j := range board[i] {
+			board[i][j] = "."
+		}
+	}
+	return board
+}
